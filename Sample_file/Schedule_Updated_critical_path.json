@@ -1,0 +1,739 @@
+{
+  "project": {
+    "project_code": "BIG_CR_L3_F05_UP0825",
+    "project_name": ""
+  },
+  "summary": {
+    "total_duration_hours": 89804.0,
+    "total_duration_days": 11225.5,
+    "critical_path_count": 2,
+    "total_activities_on_critical_paths": 51
+  },
+  "critical_paths": [
+    {
+      "path_id": 1,
+      "is_primary": true,
+      "duration_hours": 82684.0,
+      "duration_days": 10335.5,
+      "activity_count": 50,
+      "activities": [
+        {
+          "sequence": 1,
+          "task_code": "0000MSPM0000010",
+          "task_name": "Start of eDED Phase",
+          "planned_start_date": "2022-03-01T08:00:00Z",
+          "planned_end_date": "2022-03-01T08:00:00Z"
+        },
+        {
+          "sequence": 2,
+          "task_code": "0000PMPM0000010",
+          "task_name": "eDED Kick-off Meeting",
+          "planned_start_date": "2022-03-01T08:00:00Z",
+          "planned_end_date": "2022-03-01T17:00:00Z"
+        },
+        {
+          "sequence": 3,
+          "task_code": "0000PMPM0000020",
+          "task_name": "Pre-Kick Off Meeting with the Owner",
+          "planned_start_date": "2022-05-26T08:00:00Z",
+          "planned_end_date": "2022-05-26T17:00:00Z"
+        },
+        {
+          "sequence": 4,
+          "task_code": "0000MSPM0000030",
+          "task_name": "Pre-Kick Off Meeting with the Owner",
+          "planned_start_date": "2022-05-26T17:00:00Z",
+          "planned_end_date": "2022-05-26T17:00:00Z"
+        },
+        {
+          "sequence": 5,
+          "task_code": "0000IFMR1200010e",
+          "task_name": "Cracked Gas Compressor 021K 3101 - 021K 3102 - Key Vendor Documents from Clients",
+          "planned_start_date": "2022-10-31T08:00:00Z",
+          "planned_end_date": "2023-04-19T17:00:00Z"
+        },
+        {
+          "sequence": 6,
+          "task_code": "0000IFMR1200040e",
+          "task_name": "eDrive System for the Main Compressors - Key Vendor Documents from Clients",
+          "planned_start_date": "2022-10-31T08:00:00Z",
+          "planned_end_date": "2023-04-19T17:00:00Z"
+        },
+        {
+          "sequence": 7,
+          "task_code": "0000AEOD0000010",
+          "task_name": "Delay Event 02a: OWNER¡¯s Delay Delivery for LLE Key Vendor Documents for 60% Model Review",
+          "planned_start_date": "2022-03-01T08:00:00Z",
+          "planned_end_date": "2022-03-01T17:00:00Z"
+        },
+        {
+          "sequence": 8,
+          "task_code": "0000DE000000040",
+          "task_name": "60% 3D Model Review",
+          "planned_start_date": "2023-04-10T08:00:00Z",
+          "planned_end_date": "2023-05-05T17:00:00Z"
+        },
+        {
+          "sequence": 9,
+          "task_code": "V021DE023100040",
+          "task_name": "P&ID - IFD4",
+          "planned_start_date": "2023-05-01T08:00:00Z",
+          "planned_end_date": "2023-05-30T17:00:00Z"
+        },
+        {
+          "sequence": 10,
+          "task_code": "V021DE023100050",
+          "task_name": "P&ID - IFD5",
+          "planned_start_date": "2023-05-29T08:00:00Z",
+          "planned_end_date": "2023-07-26T17:00:00Z"
+        },
+        {
+          "sequence": 11,
+          "task_code": "0000DE000000050",
+          "task_name": "3D Model Update and Preparation for 90% 3D Model Review",
+          "planned_start_date": "2023-05-01T08:00:00Z",
+          "planned_end_date": "2023-08-04T17:00:00Z"
+        },
+        {
+          "sequence": 12,
+          "task_code": "0000DE000000060",
+          "task_name": "90% 3D Model Review",
+          "planned_start_date": "2023-09-30T08:00:00Z",
+          "planned_end_date": "2023-11-08T17:00:00Z"
+        },
+        {
+          "sequence": 13,
+          "task_code": "V021DE303200060",
+          "task_name": "Steel Structure Drawings for PAUs",
+          "planned_start_date": "2023-02-27T08:00:00Z",
+          "planned_end_date": "2023-09-26T17:00:00Z"
+        },
+        {
+          "sequence": 14,
+          "task_code": "V021MDG24410A10",
+          "task_name": "G24410A (SN07SH02): Black & Grey Water - Steel Structure Fabrication and Erection",
+          "planned_start_date": "2023-09-30T08:00:00Z",
+          "planned_end_date": "2024-05-06T16:00:00Z"
+        },
+        {
+          "sequence": 15,
+          "task_code": "V021MDG22210A10",
+          "task_name": "G22210A (SN08SH02): C8/C9 Separation, C5/C6 Sepa - Steel Structure Fabrication and Erection",
+          "planned_start_date": "2023-10-20T08:00:00Z",
+          "planned_end_date": "2024-05-26T16:00:00Z"
+        },
+        {
+          "sequence": 16,
+          "task_code": "V021MDG22710A10",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Steel Structure Fabrication and Erection",
+          "planned_start_date": "2023-10-20T08:00:00Z",
+          "planned_end_date": "2024-05-26T16:00:00Z"
+        },
+        {
+          "sequence": 17,
+          "task_code": "V021MDG22710A12",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Equipment (5E)",
+          "planned_start_date": "2024-02-17T08:00:00Z",
+          "planned_end_date": "2024-04-14T16:00:00Z"
+        },
+        {
+          "sequence": 18,
+          "task_code": "V021MDG22710A14",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Piping Pre-fabrication and Installation (incl. NDT & Testing)",
+          "planned_start_date": "2023-12-03T08:00:00Z",
+          "planned_end_date": "2024-07-20T16:00:00Z"
+        },
+        {
+          "sequence": 19,
+          "task_code": "V021MDG22710A15",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - E&I Installation",
+          "planned_start_date": "2024-01-12T08:00:00Z",
+          "planned_end_date": "2024-07-20T16:00:00Z"
+        },
+        {
+          "sequence": 20,
+          "task_code": "V021MDG22710A18",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Pre-Commissioning",
+          "planned_start_date": "2024-06-26T08:00:00Z",
+          "planned_end_date": "2024-08-04T16:00:00Z"
+        },
+        {
+          "sequence": 21,
+          "task_code": "V021MDG22710A19",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Final Punch Clearance and Preservation",
+          "planned_start_date": "2024-07-18T08:00:00Z",
+          "planned_end_date": "2024-08-16T16:00:00Z"
+        },
+        {
+          "sequence": 22,
+          "task_code": "V021MDG22710A20",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Load Out and Seafastening",
+          "planned_start_date": "2024-08-17T08:00:00Z",
+          "planned_end_date": "2024-08-22T16:00:00Z"
+        },
+        {
+          "sequence": 23,
+          "task_code": "V021MDG22710A30",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-08-23T08:00:00Z",
+          "planned_end_date": "2024-09-06T16:00:00Z"
+        },
+        {
+          "sequence": 24,
+          "task_code": "V021MDG22610A30",
+          "task_name": "G22610A (SN10SH02): Gasoline Hydrogenation II and Stripping - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-08-23T08:00:00Z",
+          "planned_end_date": "2024-09-06T16:00:00Z"
+        },
+        {
+          "sequence": 25,
+          "task_code": "V021MDG22510A30",
+          "task_name": "G22510A (SN11SH02): Gasoline Hydrogenation I + II - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-08-23T08:00:00Z",
+          "planned_end_date": "2024-09-06T16:00:00Z"
+        },
+        {
+          "sequence": 26,
+          "task_code": "V021MDG32620A30",
+          "task_name": "G32620A (SN19SH05): Wash Water System - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-14T08:00:00Z",
+          "planned_end_date": "2024-09-28T16:00:00Z"
+        },
+        {
+          "sequence": 27,
+          "task_code": "V021MDG32630A30",
+          "task_name": "G32630A (SN20SH05): Pyrolysis Fuel Oil Cooler - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-14T08:00:00Z",
+          "planned_end_date": "2024-09-28T16:00:00Z"
+        },
+        {
+          "sequence": 28,
+          "task_code": "V021MDG32420A30",
+          "task_name": "G32420A (SN21SH05): Process Steam System - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-14T08:00:00Z",
+          "planned_end_date": "2024-09-28T16:00:00Z"
+        },
+        {
+          "sequence": 29,
+          "task_code": "V021MDG24210A30",
+          "task_name": "G24210A (SN22SH06): C4 Hydrogenation - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-21T08:00:00Z",
+          "planned_end_date": "2024-10-05T16:00:00Z"
+        },
+        {
+          "sequence": 30,
+          "task_code": "V021MDG375i10A30",
+          "task_name": "G375i10A (SN23SH06): Furnace Pipe Rack - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-21T08:00:00Z",
+          "planned_end_date": "2024-10-05T16:00:00Z"
+        },
+        {
+          "sequence": 31,
+          "task_code": "V021MDG375i20A30",
+          "task_name": "G375i20A (SN24SH07): Furnace Pipe Rack - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-26T08:00:00Z",
+          "planned_end_date": "2024-10-10T16:00:00Z"
+        },
+        {
+          "sequence": 32,
+          "task_code": "V021MDG375i30A30",
+          "task_name": "G375i30A (SN25SH07): Furnace Pipe Rack - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-26T08:00:00Z",
+          "planned_end_date": "2024-10-10T16:00:00Z"
+        },
+        {
+          "sequence": 33,
+          "task_code": "V021MDG375i30A40",
+          "task_name": "G375i30A (SN25SH07): Furnace Pipe Rack - SPMT Inland Transportation and Site Installation",
+          "planned_start_date": "2024-10-20T08:00:00Z",
+          "planned_end_date": "2024-10-22T16:00:00Z"
+        },
+        {
+          "sequence": 34,
+          "task_code": "G310CNEL0000010",
+          "task_name": "Areas Electrical Cable Tray Installation",
+          "planned_start_date": "2024-10-23T08:00:00Z",
+          "planned_end_date": "2024-12-06T16:00:00Z"
+        },
+        {
+          "sequence": 35,
+          "task_code": "G310CNIN0000010",
+          "task_name": "Area Instrument Cable Tray Installation",
+          "planned_start_date": "2024-10-23T08:00:00Z",
+          "planned_end_date": "2024-12-06T16:00:00Z"
+        },
+        {
+          "sequence": 36,
+          "task_code": "G310CNIN0000020",
+          "task_name": "Area Instrument Installation",
+          "planned_start_date": "2024-11-07T08:00:00Z",
+          "planned_end_date": "2025-02-04T16:00:00Z"
+        },
+        {
+          "sequence": 37,
+          "task_code": "G310CNIN0000030",
+          "task_name": "Area Instrument Cable Laying",
+          "planned_start_date": "2024-11-22T08:00:00Z",
+          "planned_end_date": "2025-02-19T16:00:00Z"
+        },
+        {
+          "sequence": 38,
+          "task_code": "G310CNIN0000040",
+          "task_name": "Area Instrument Wiring",
+          "planned_start_date": "2024-12-22T08:00:00Z",
+          "planned_end_date": "2025-03-09T16:00:00Z"
+        },
+        {
+          "sequence": 39,
+          "task_code": "0000CNPC0000040",
+          "task_name": "Instrument Loop Checks",
+          "planned_start_date": "2025-01-16T08:00:00Z",
+          "planned_end_date": "2025-05-31T16:00:00Z"
+        },
+        {
+          "sequence": 40,
+          "task_code": "0000CMCM0000020",
+          "task_name": "Instrument System Commissioning",
+          "planned_start_date": "2025-01-17T08:00:00Z",
+          "planned_end_date": "2025-07-31T16:00:00Z"
+        },
+        {
+          "sequence": 41,
+          "task_code": "0000CMCM0000040",
+          "task_name": "Utilities Commissioning & Start-Up",
+          "planned_start_date": "2025-03-05T08:00:00Z",
+          "planned_end_date": "2025-06-30T16:00:00Z"
+        },
+        {
+          "sequence": 42,
+          "task_code": "0000CMCM0000041",
+          "task_name": "PA/PI System Commissioning",
+          "planned_start_date": "2025-03-05T08:00:00Z",
+          "planned_end_date": "2025-04-15T16:00:00Z"
+        },
+        {
+          "sequence": 43,
+          "task_code": "0000CMCM0000043",
+          "task_name": "Steam System Commissioning",
+          "planned_start_date": "2025-05-20T08:00:00Z",
+          "planned_end_date": "2025-06-10T16:00:00Z"
+        },
+        {
+          "sequence": 44,
+          "task_code": "0000CMCM0000070",
+          "task_name": "System tightness test",
+          "planned_start_date": "2025-07-10T08:00:00Z",
+          "planned_end_date": "2025-08-30T16:00:00Z"
+        },
+        {
+          "sequence": 45,
+          "task_code": "0000CMCM0000080",
+          "task_name": "System Drying, Inerting with N2 (Catalysts Loading)",
+          "planned_start_date": "2025-07-01T08:00:00Z",
+          "planned_end_date": "2025-09-25T16:00:00Z"
+        },
+        {
+          "sequence": 46,
+          "task_code": "0000CMCM0000090",
+          "task_name": "Furnaces Drying Out",
+          "planned_start_date": "2025-08-01T08:00:00Z",
+          "planned_end_date": "2025-10-25T16:00:00Z"
+        },
+        {
+          "sequence": 47,
+          "task_code": "0000PTPM00004010",
+          "task_name": "Start-up Plan preparation to support the Owner's Applying for Start-up Permit (Keeping Recording at Authority)",
+          "planned_start_date": "2025-08-01T08:00:00Z",
+          "planned_end_date": "2025-10-31T17:00:00Z"
+        },
+        {
+          "sequence": 48,
+          "task_code": "0000SUSU0000010",
+          "task_name": "Start-UP and Stable Operation",
+          "planned_start_date": "2025-11-01T08:00:00Z",
+          "planned_end_date": "2026-02-07T16:00:00Z"
+        },
+        {
+          "sequence": 49,
+          "task_code": "0000SUPT0000010",
+          "task_name": "Performance Test",
+          "planned_start_date": "2026-02-08T08:00:00Z",
+          "planned_end_date": "2026-02-28T16:00:00Z"
+        },
+        {
+          "sequence": 50,
+          "task_code": "0000MSSU0000010",
+          "task_name": "Performance Test Complete and Initial Acceptance",
+          "planned_start_date": "2026-02-28T16:00:00Z",
+          "planned_end_date": "2026-02-28T16:00:00Z"
+        }
+      ]
+    },
+    {
+      "path_id": 2,
+      "is_primary": false,
+      "duration_hours": 82684.0,
+      "duration_days": 10335.5,
+      "activity_count": 51,
+      "activities": [
+        {
+          "sequence": 1,
+          "task_code": "0000MSPM0000010",
+          "task_name": "Start of eDED Phase",
+          "planned_start_date": "2022-03-01T08:00:00Z",
+          "planned_end_date": "2022-03-01T08:00:00Z"
+        },
+        {
+          "sequence": 2,
+          "task_code": "0000PMPM0000010",
+          "task_name": "eDED Kick-off Meeting",
+          "planned_start_date": "2022-03-01T08:00:00Z",
+          "planned_end_date": "2022-03-01T17:00:00Z"
+        },
+        {
+          "sequence": 3,
+          "task_code": "0000PMPM0000020",
+          "task_name": "Pre-Kick Off Meeting with the Owner",
+          "planned_start_date": "2022-05-26T08:00:00Z",
+          "planned_end_date": "2022-05-26T17:00:00Z"
+        },
+        {
+          "sequence": 4,
+          "task_code": "0000MSPM0000030",
+          "task_name": "Pre-Kick Off Meeting with the Owner",
+          "planned_start_date": "2022-05-26T17:00:00Z",
+          "planned_end_date": "2022-05-26T17:00:00Z"
+        },
+        {
+          "sequence": 5,
+          "task_code": "0000IFMR1200010e",
+          "task_name": "Cracked Gas Compressor 021K 3101 - 021K 3102 - Key Vendor Documents from Clients",
+          "planned_start_date": "2022-10-31T08:00:00Z",
+          "planned_end_date": "2023-04-19T17:00:00Z"
+        },
+        {
+          "sequence": 6,
+          "task_code": "0000IFMR1200040e",
+          "task_name": "eDrive System for the Main Compressors - Key Vendor Documents from Clients",
+          "planned_start_date": "2022-10-31T08:00:00Z",
+          "planned_end_date": "2023-04-19T17:00:00Z"
+        },
+        {
+          "sequence": 7,
+          "task_code": "0000AEOD0000010",
+          "task_name": "Delay Event 02a: OWNER¡¯s Delay Delivery for LLE Key Vendor Documents for 60% Model Review",
+          "planned_start_date": "2022-03-01T08:00:00Z",
+          "planned_end_date": "2022-03-01T17:00:00Z"
+        },
+        {
+          "sequence": 8,
+          "task_code": "0000DE000000040",
+          "task_name": "60% 3D Model Review",
+          "planned_start_date": "2023-04-10T08:00:00Z",
+          "planned_end_date": "2023-05-05T17:00:00Z"
+        },
+        {
+          "sequence": 9,
+          "task_code": "V021DE023100040",
+          "task_name": "P&ID - IFD4",
+          "planned_start_date": "2023-05-01T08:00:00Z",
+          "planned_end_date": "2023-05-30T17:00:00Z"
+        },
+        {
+          "sequence": 10,
+          "task_code": "V021DE023100050",
+          "task_name": "P&ID - IFD5",
+          "planned_start_date": "2023-05-29T08:00:00Z",
+          "planned_end_date": "2023-07-26T17:00:00Z"
+        },
+        {
+          "sequence": 11,
+          "task_code": "0000DE000000050",
+          "task_name": "3D Model Update and Preparation for 90% 3D Model Review",
+          "planned_start_date": "2023-05-01T08:00:00Z",
+          "planned_end_date": "2023-08-04T17:00:00Z"
+        },
+        {
+          "sequence": 12,
+          "task_code": "0000DE000000060",
+          "task_name": "90% 3D Model Review",
+          "planned_start_date": "2023-09-30T08:00:00Z",
+          "planned_end_date": "2023-11-08T17:00:00Z"
+        },
+        {
+          "sequence": 13,
+          "task_code": "V021DE303200060",
+          "task_name": "Steel Structure Drawings for PAUs",
+          "planned_start_date": "2023-02-27T08:00:00Z",
+          "planned_end_date": "2023-09-26T17:00:00Z"
+        },
+        {
+          "sequence": 14,
+          "task_code": "V021MDG24410A10",
+          "task_name": "G24410A (SN07SH02): Black & Grey Water - Steel Structure Fabrication and Erection",
+          "planned_start_date": "2023-09-30T08:00:00Z",
+          "planned_end_date": "2024-05-06T16:00:00Z"
+        },
+        {
+          "sequence": 15,
+          "task_code": "V021MDG22210A10",
+          "task_name": "G22210A (SN08SH02): C8/C9 Separation, C5/C6 Sepa - Steel Structure Fabrication and Erection",
+          "planned_start_date": "2023-10-20T08:00:00Z",
+          "planned_end_date": "2024-05-26T16:00:00Z"
+        },
+        {
+          "sequence": 16,
+          "task_code": "V021MDG22710A10",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Steel Structure Fabrication and Erection",
+          "planned_start_date": "2023-10-20T08:00:00Z",
+          "planned_end_date": "2024-05-26T16:00:00Z"
+        },
+        {
+          "sequence": 17,
+          "task_code": "V021MDG22710A12",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Equipment (5E)",
+          "planned_start_date": "2024-02-17T08:00:00Z",
+          "planned_end_date": "2024-04-14T16:00:00Z"
+        },
+        {
+          "sequence": 18,
+          "task_code": "V021MDG22710A14",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Piping Pre-fabrication and Installation (incl. NDT & Testing)",
+          "planned_start_date": "2023-12-03T08:00:00Z",
+          "planned_end_date": "2024-07-20T16:00:00Z"
+        },
+        {
+          "sequence": 19,
+          "task_code": "V021MDG22710A15",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - E&I Installation",
+          "planned_start_date": "2024-01-12T08:00:00Z",
+          "planned_end_date": "2024-07-20T16:00:00Z"
+        },
+        {
+          "sequence": 20,
+          "task_code": "V021MDG22710A18",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Pre-Commissioning",
+          "planned_start_date": "2024-06-26T08:00:00Z",
+          "planned_end_date": "2024-08-04T16:00:00Z"
+        },
+        {
+          "sequence": 21,
+          "task_code": "V021MDG22710A19",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Final Punch Clearance and Preservation",
+          "planned_start_date": "2024-07-18T08:00:00Z",
+          "planned_end_date": "2024-08-16T16:00:00Z"
+        },
+        {
+          "sequence": 22,
+          "task_code": "V021MDG22710A20",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Load Out and Seafastening",
+          "planned_start_date": "2024-08-17T08:00:00Z",
+          "planned_end_date": "2024-08-22T16:00:00Z"
+        },
+        {
+          "sequence": 23,
+          "task_code": "V021MDG22710A30",
+          "task_name": "G22710A (SN09SH02): Feed Preheating - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-08-23T08:00:00Z",
+          "planned_end_date": "2024-09-06T16:00:00Z"
+        },
+        {
+          "sequence": 24,
+          "task_code": "V021MDG22610A30",
+          "task_name": "G22610A (SN10SH02): Gasoline Hydrogenation II and Stripping - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-08-23T08:00:00Z",
+          "planned_end_date": "2024-09-06T16:00:00Z"
+        },
+        {
+          "sequence": 25,
+          "task_code": "V021MDG22510A30",
+          "task_name": "G22510A (SN11SH02): Gasoline Hydrogenation I + II - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-08-23T08:00:00Z",
+          "planned_end_date": "2024-09-06T16:00:00Z"
+        },
+        {
+          "sequence": 26,
+          "task_code": "V021MDG32620A30",
+          "task_name": "G32620A (SN19SH05): Wash Water System - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-14T08:00:00Z",
+          "planned_end_date": "2024-09-28T16:00:00Z"
+        },
+        {
+          "sequence": 27,
+          "task_code": "V021MDG32630A30",
+          "task_name": "G32630A (SN20SH05): Pyrolysis Fuel Oil Cooler - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-14T08:00:00Z",
+          "planned_end_date": "2024-09-28T16:00:00Z"
+        },
+        {
+          "sequence": 28,
+          "task_code": "V021MDG32420A30",
+          "task_name": "G32420A (SN21SH05): Process Steam System - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-14T08:00:00Z",
+          "planned_end_date": "2024-09-28T16:00:00Z"
+        },
+        {
+          "sequence": 29,
+          "task_code": "V021MDG24210A30",
+          "task_name": "G24210A (SN22SH06): C4 Hydrogenation - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-21T08:00:00Z",
+          "planned_end_date": "2024-10-05T16:00:00Z"
+        },
+        {
+          "sequence": 30,
+          "task_code": "V021MDG375i10A30",
+          "task_name": "G375i10A (SN23SH06): Furnace Pipe Rack - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-21T08:00:00Z",
+          "planned_end_date": "2024-10-05T16:00:00Z"
+        },
+        {
+          "sequence": 31,
+          "task_code": "V021MDG375i20A30",
+          "task_name": "G375i20A (SN24SH07): Furnace Pipe Rack - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-26T08:00:00Z",
+          "planned_end_date": "2024-10-10T16:00:00Z"
+        },
+        {
+          "sequence": 32,
+          "task_code": "V021MDG375i30A30",
+          "task_name": "G375i30A (SN25SH07): Furnace Pipe Rack - Transport and Arrival at Site Jetty",
+          "planned_start_date": "2024-09-26T08:00:00Z",
+          "planned_end_date": "2024-10-10T16:00:00Z"
+        },
+        {
+          "sequence": 33,
+          "task_code": "V021MDG375i30A40",
+          "task_name": "G375i30A (SN25SH07): Furnace Pipe Rack - SPMT Inland Transportation and Site Installation",
+          "planned_start_date": "2024-10-20T08:00:00Z",
+          "planned_end_date": "2024-10-22T16:00:00Z"
+        },
+        {
+          "sequence": 34,
+          "task_code": "G310CNEL0000010",
+          "task_name": "Areas Electrical Cable Tray Installation",
+          "planned_start_date": "2024-10-23T08:00:00Z",
+          "planned_end_date": "2024-12-06T16:00:00Z"
+        },
+        {
+          "sequence": 35,
+          "task_code": "G310CNIN0000010",
+          "task_name": "Area Instrument Cable Tray Installation",
+          "planned_start_date": "2024-10-23T08:00:00Z",
+          "planned_end_date": "2024-12-06T16:00:00Z"
+        },
+        {
+          "sequence": 36,
+          "task_code": "G310CNIN0000020",
+          "task_name": "Area Instrument Installation",
+          "planned_start_date": "2024-11-07T08:00:00Z",
+          "planned_end_date": "2025-02-04T16:00:00Z"
+        },
+        {
+          "sequence": 37,
+          "task_code": "G310CNIN0000030",
+          "task_name": "Area Instrument Cable Laying",
+          "planned_start_date": "2024-11-22T08:00:00Z",
+          "planned_end_date": "2025-02-19T16:00:00Z"
+        },
+        {
+          "sequence": 38,
+          "task_code": "G310CNIN0000040",
+          "task_name": "Area Instrument Wiring",
+          "planned_start_date": "2024-12-22T08:00:00Z",
+          "planned_end_date": "2025-03-09T16:00:00Z"
+        },
+        {
+          "sequence": 39,
+          "task_code": "0000CNPC0000040",
+          "task_name": "Instrument Loop Checks",
+          "planned_start_date": "2025-01-16T08:00:00Z",
+          "planned_end_date": "2025-05-31T16:00:00Z"
+        },
+        {
+          "sequence": 40,
+          "task_code": "0000CMCM0000020",
+          "task_name": "Instrument System Commissioning",
+          "planned_start_date": "2025-01-17T08:00:00Z",
+          "planned_end_date": "2025-07-31T16:00:00Z"
+        },
+        {
+          "sequence": 41,
+          "task_code": "0000CMCM0000040",
+          "task_name": "Utilities Commissioning & Start-Up",
+          "planned_start_date": "2025-03-05T08:00:00Z",
+          "planned_end_date": "2025-06-30T16:00:00Z"
+        },
+        {
+          "sequence": 42,
+          "task_code": "0000CMCM0000041",
+          "task_name": "PA/PI System Commissioning",
+          "planned_start_date": "2025-03-05T08:00:00Z",
+          "planned_end_date": "2025-04-15T16:00:00Z"
+        },
+        {
+          "sequence": 43,
+          "task_code": "0000CMCM0000043",
+          "task_name": "Steam System Commissioning",
+          "planned_start_date": "2025-05-20T08:00:00Z",
+          "planned_end_date": "2025-06-10T16:00:00Z"
+        },
+        {
+          "sequence": 44,
+          "task_code": "0000CMCM0000070",
+          "task_name": "System tightness test",
+          "planned_start_date": "2025-07-10T08:00:00Z",
+          "planned_end_date": "2025-08-30T16:00:00Z"
+        },
+        {
+          "sequence": 45,
+          "task_code": "0000CMCM0000080",
+          "task_name": "System Drying, Inerting with N2 (Catalysts Loading)",
+          "planned_start_date": "2025-07-01T08:00:00Z",
+          "planned_end_date": "2025-09-25T16:00:00Z"
+        },
+        {
+          "sequence": 46,
+          "task_code": "0000CMCM0000090",
+          "task_name": "Furnaces Drying Out",
+          "planned_start_date": "2025-08-01T08:00:00Z",
+          "planned_end_date": "2025-10-25T16:00:00Z"
+        },
+        {
+          "sequence": 47,
+          "task_code": "0000PTPM00004010",
+          "task_name": "Start-up Plan preparation to support the Owner's Applying for Start-up Permit (Keeping Recording at Authority)",
+          "planned_start_date": "2025-08-01T08:00:00Z",
+          "planned_end_date": "2025-10-31T17:00:00Z"
+        },
+        {
+          "sequence": 48,
+          "task_code": "0000MSPT0000030",
+          "task_name": "Start-up Permit Available",
+          "planned_start_date": "2025-10-31T17:00:00Z",
+          "planned_end_date": "2025-10-31T17:00:00Z"
+        },
+        {
+          "sequence": 49,
+          "task_code": "0000SUSU0000010",
+          "task_name": "Start-UP and Stable Operation",
+          "planned_start_date": "2025-11-01T08:00:00Z",
+          "planned_end_date": "2026-02-07T16:00:00Z"
+        },
+        {
+          "sequence": 50,
+          "task_code": "0000SUPT0000010",
+          "task_name": "Performance Test",
+          "planned_start_date": "2026-02-08T08:00:00Z",
+          "planned_end_date": "2026-02-28T16:00:00Z"
+        },
+        {
+          "sequence": 51,
+          "task_code": "0000MSSU0000010",
+          "task_name": "Performance Test Complete and Initial Acceptance",
+          "planned_start_date": "2026-02-28T16:00:00Z",
+          "planned_end_date": "2026-02-28T16:00:00Z"
+        }
+      ]
+    }
+  ]
+}

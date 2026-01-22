@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Output files (generated)
+output/
+Output/
+*.json
+*.md
+
+# Keep documentation and sample files
+!CLAUDE.md
+!FUNCTIONAL_DESIGN.md
+!Sample_file/**/*.json
+!Sample_file/**/*.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# IDE
+.vscode/
+.idea/
