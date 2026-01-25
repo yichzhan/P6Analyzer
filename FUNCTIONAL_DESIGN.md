@@ -114,32 +114,24 @@ P6 supports four dependency relationship types:
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  STEP 2: IDENTIFY DELAYED ACTIVITIES                            │
-│  For each task_code in critical path:                           │
-│    - Skip if not found in baseline (new activity)               │
+│  STEP 2: ANALYZE ALL DELAYS                                     │
+│  For each task_code in both baseline AND updated:               │
 │    - Compare baseline vs updated planned_start_date             │
 │    - Compare baseline vs updated planned_end_date               │
 │    - If either date moved later → activity is DELAYED           │
+│    - Analyze cause and impact for delayed activities            │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
-│  STEP 3: ANALYZE EACH DELAYED ACTIVITY                          │
-│  For each delayed activity:                                     │
-│    A. CAUSE ANALYSIS (← Predecessors)                           │
-│       - Check each predecessor's delay status                   │
-│       - Consider dependency_type to check relevant date         │
-│       - Determine delay_reason: "by_itself" or "by_predecessor" │
-│                                                                 │
-│    B. IMPACT ANALYSIS (→ Successors)                            │
-│       - Get direct successors from updated schedule             │
-│       - Consider dependency_type to determine impact            │
-│       - List impacted successor tasks                           │
+│  STEP 3: FILTER CRITICAL PATH DELAYS                            │
+│  - Filter all_delays to only activities on critical path        │
+│  - Create critical_delays subset                                │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
 │  STEP 4: GENERATE OUTPUT                                        │
-│  - output.json (machine-readable)                               │
-│  - output.md (human-readable report)                            │
+│  - all_delays.json, all_delays.md (all delayed activities)      │
+│  - critical_delays.json, critical_delays.md (critical path only)│
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -202,11 +194,12 @@ For each successor in activity.dependencies.successors:
     "baseline_project_code": "BIG_CR_L3_F05_UP0331",
     "updated_project_code": "BIG_CR_L3_F05_UP0825"
   },
+  "report_type": "all",  // or "critical"
   "summary": {
-    "total_critical_activities": 51,
-    "delayed_count": 8,
-    "by_itself_count": 2,
-    "by_predecessor_count": 6
+    "total_activities_analyzed": 3088,
+    "delayed_count": 1462,
+    "by_itself_count": 100,
+    "by_predecessor_count": 1362
   },
   "delayed_activities": [
     {
@@ -326,14 +319,14 @@ These activities are delayed due to upstream dependencies.
 ## 6. Command Line Interface
 
 ```bash
-python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -o <output_prefix>
+python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> [-d <output_dir>]
 ```
 
 **Arguments:**
 - `baseline.json` - Path to baseline schedule JSON file
 - `updated.json` - Path to updated schedule JSON file
 - `critical_path.json` - Path to critical path JSON file
-- `-o <output_prefix>` - Output file prefix (generates `<prefix>.json` and `<prefix>.md`)
+- `-d <output_dir>` - Output directory (optional, defaults to current directory)
 
 **Example:**
 ```bash
@@ -341,12 +334,14 @@ python p6analyzer.py \
     Sample_file/Schedule_Baseline_activities.json \
     Sample_file/Schedule_Updated_activities.json \
     Sample_file/Schedule_Updated_critical_path.json \
-    -o analysis_output
+    -d Output
 ```
 
-This generates:
-- `analysis_output.json`
-- `analysis_output.md`
+This generates 4 files in the output directory:
+- `all_delays.json` - All delayed activities (JSON)
+- `all_delays.md` - All delayed activities (Markdown)
+- `critical_delays.json` - Critical path delays only (JSON)
+- `critical_delays.md` - Critical path delays only (Markdown)
 
 ## 7. Design Decisions
 

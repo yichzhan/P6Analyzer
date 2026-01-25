@@ -17,28 +17,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 2. **Updated schedule** - Current/revised schedule (same structure)
 3. **Critical path** - Activities on the critical path from updated schedule
 
-**Output**: Report listing:
-- Activities that are delayed AND on the critical path
-- Downstream tasks impacted by each delay
+**Output** (4 files generated):
+- `all_delays.json` / `all_delays.md` - ALL delayed activities in the project
+- `critical_delays.json` / `critical_delays.md` - Only delays on the critical path
 
 ## Build & Development Commands
 
 ```bash
-# Basic usage (outputs both JSON and Markdown)
-python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -o <output_prefix>
+# Basic usage (outputs to current directory)
+python p6analyzer.py <baseline.json> <updated.json> <critical_path.json>
 
 # With output directory
-python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -o <output_prefix> -d <output_dir>
-
-# Specific format only
-python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -o <output_prefix> -f json
-python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -o <output_prefix> -f md
+python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -d <output_dir>
 ```
 
 **Options:**
-- `-o, --output` - Output file prefix (required)
 - `-d, --output-dir` - Output directory (default: current directory)
-- `-f, --format` - Output format: `json`, `md`, or `both` (default: `both`)
 
 No pip install required - uses Python standard library only.
 
@@ -47,7 +41,7 @@ No pip install required - uses Python standard library only.
 python p6analyzer.py Sample_file/Schedule_Baseline_activities.json \
     Sample_file/Schedule_Updated_activities.json \
     Sample_file/Schedule_Updated_critical_path.json \
-    -o analysis -d Output
+    -d Output
 ```
 
 ## Architecture
@@ -127,14 +121,17 @@ p6analyzer.py                       # Single-file CLI tool (~500 lines)
 
 ## Output Format
 
+Both `all_delays` and `critical_delays` files share the same structure.
+
 ### JSON Structure
 ```json
 {
+  "report_type": "all",  // or "critical"
   "summary": {
-    "total_critical_activities": 51,
-    "delayed_count": 8,
-    "by_itself_count": 2,
-    "by_predecessor_count": 6
+    "total_activities_analyzed": 3088,
+    "delayed_count": 1462,
+    "by_itself_count": 100,
+    "by_predecessor_count": 1362
   },
   "delayed_activities": [
     {

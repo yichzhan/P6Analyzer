@@ -187,19 +187,24 @@ def find_impacted_successors(
 
 
 def analyze_delays(
-    critical_tasks: Set[str],
+    task_codes: Set[str],
     baseline_activities: Dict[str, dict],
     updated_activities: Dict[str, dict]
 ) -> List[dict]:
     """
-    Analyze all critical path activities for delays.
+    Analyze specified activities for delays.
+
+    Args:
+        task_codes: Set of task codes to analyze
+        baseline_activities: Baseline schedule indexed by task_code
+        updated_activities: Updated schedule indexed by task_code
 
     Returns:
         List of delayed activity analysis results
     """
     delayed_activities = []
 
-    for task_code in critical_tasks:
+    for task_code in task_codes:
         baseline = baseline_activities.get(task_code)
         updated = updated_activities.get(task_code)
 
@@ -260,8 +265,9 @@ def analyze_delays(
 
 def generate_json_output(
     delayed_activities: List[dict],
-    critical_tasks: Set[str],
-    analysis_info: dict
+    total_activities: int,
+    analysis_info: dict,
+    report_type: str = "all"
 ) -> dict:
     """Generate JSON output structure."""
     by_itself_count = sum(1 for a in delayed_activities if a['delay_reason'] == 'by_itself')
@@ -269,8 +275,9 @@ def generate_json_output(
 
     return {
         'analysis_info': analysis_info,
+        'report_type': report_type,
         'summary': {
-            'total_critical_activities': len(critical_tasks),
+            'total_activities_analyzed': total_activities,
             'delayed_count': len(delayed_activities),
             'by_itself_count': by_itself_count,
             'by_predecessor_count': by_predecessor_count
@@ -291,15 +298,23 @@ def format_date_short(date_str: Optional[str]) -> str:
 
 def generate_markdown_output(
     delayed_activities: List[dict],
-    critical_tasks: Set[str],
-    analysis_info: dict
+    total_activities: int,
+    analysis_info: dict,
+    report_type: str = "all"
 ) -> str:
     """Generate Markdown report."""
     by_itself = [a for a in delayed_activities if a['delay_reason'] == 'by_itself']
     by_predecessor = [a for a in delayed_activities if a['delay_reason'] == 'by_predecessor']
 
+    if report_type == "critical":
+        title = "# P6 Critical Path Delay Analysis Report"
+        activities_label = "Critical Path Activities"
+    else:
+        title = "# P6 All Delays Analysis Report"
+        activities_label = "Total Activities Analyzed"
+
     lines = [
-        "# P6 Schedule Delay Analysis Report",
+        title,
         "",
         f"**Project**: {analysis_info.get('updated_project_code', 'N/A')}",
         f"**Analysis Date**: {analysis_info.get('analysis_date', 'N/A')[:10]}",
@@ -312,7 +327,7 @@ def generate_markdown_output(
         "",
         "| Metric | Count |",
         "|--------|-------|",
-        f"| Critical Path Activities | {len(critical_tasks)} |",
+        f"| {activities_label} | {total_activities} |",
         f"| Delayed Activities | {len(delayed_activities)} |",
         f"| Delayed by Itself | {len(by_itself)} |",
         f"| Delayed by Predecessor | {len(by_predecessor)} |",
@@ -427,27 +442,22 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
-  python p6analyzer.py baseline.json updated.json critical_path.json -o analysis
-  python p6analyzer.py baseline.json updated.json critical_path.json -o analysis -d output/
-  python p6analyzer.py baseline.json updated.json critical_path.json -o analysis -f json
-  python p6analyzer.py baseline.json updated.json critical_path.json -o analysis -f md
+  python p6analyzer.py baseline.json updated.json critical_path.json
+  python p6analyzer.py baseline.json updated.json critical_path.json -d output/
 
-Output formats:
-  - json: analysis.json (machine-readable)
-  - md:   analysis.md (human-readable report)
-  - both: generates both files (default)
+Output files (generated in output directory):
+  - all_delays.json      All delayed activities (JSON)
+  - all_delays.md        All delayed activities (Markdown)
+  - critical_delays.json Critical path delays only (JSON)
+  - critical_delays.md   Critical path delays only (Markdown)
         '''
     )
 
     parser.add_argument('baseline', help='Path to baseline schedule JSON file')
     parser.add_argument('updated', help='Path to updated schedule JSON file')
     parser.add_argument('critical_path', help='Path to critical path JSON file')
-    parser.add_argument('-o', '--output', required=True,
-                        help='Output file prefix (generates .json and .md files)')
     parser.add_argument('-d', '--output-dir', default='.',
                         help='Output directory (default: current directory)')
-    parser.add_argument('-f', '--format', choices=['json', 'md', 'both'], default='both',
-                        help='Output format: json, md, or both (default: both)')
 
     args = parser.parse_args()
 
@@ -464,11 +474,6 @@ Output formats:
     critical_tasks, cp_project, cp_summary = load_critical_path(args.critical_path)
     print(f"  Found {len(critical_tasks)} activities on critical path")
 
-    # Analyze delays
-    print("\nAnalyzing delays...")
-    delayed_activities = analyze_delays(critical_tasks, baseline_activities, updated_activities)
-    print(f"  Found {len(delayed_activities)} delayed activities")
-
     # Prepare analysis info
     analysis_info = {
         'analysis_date': datetime.now().isoformat(),
@@ -479,43 +484,69 @@ Output formats:
         'updated_project_code': updated_project.get('project_code', '')
     }
 
+    # Analyze ALL delays (activities that exist in both baseline and updated)
+    print("\nAnalyzing all delays...")
+    all_task_codes = set(baseline_activities.keys()) & set(updated_activities.keys())
+    all_delayed = analyze_delays(all_task_codes, baseline_activities, updated_activities)
+    print(f"  Found {len(all_delayed)} delayed activities (out of {len(all_task_codes)} common activities)")
+
+    # Filter to critical path delays
+    print("Filtering critical path delays...")
+    critical_delayed = [a for a in all_delayed if a['task_code'] in critical_tasks]
+    print(f"  Found {len(critical_delayed)} delayed activities on critical path")
+
     # Ensure output directory exists
     output_dir = args.output_dir
     if output_dir and output_dir != '.':
         os.makedirs(output_dir, exist_ok=True)
 
-    # Build output paths
-    output_prefix = os.path.join(output_dir, args.output)
-    output_format = args.format
+    # Generate all_delays outputs
+    all_json = generate_json_output(all_delayed, len(all_task_codes), analysis_info, "all")
+    all_md = generate_markdown_output(all_delayed, len(all_task_codes), analysis_info, "all")
 
-    # Write JSON output
-    if output_format in ('json', 'both'):
-        json_output = generate_json_output(delayed_activities, critical_tasks, analysis_info)
-        json_path = f"{output_prefix}.json"
-        with open(json_path, 'w', encoding='utf-8') as f:
-            json.dump(json_output, f, indent=2, ensure_ascii=False)
-        print(f"\nJSON output written to: {json_path}")
+    # Generate critical_delays outputs
+    critical_json = generate_json_output(critical_delayed, len(critical_tasks), analysis_info, "critical")
+    critical_md = generate_markdown_output(critical_delayed, len(critical_tasks), analysis_info, "critical")
 
-    # Write Markdown output
-    if output_format in ('md', 'both'):
-        md_output = generate_markdown_output(delayed_activities, critical_tasks, analysis_info)
-        md_path = f"{output_prefix}.md"
-        with open(md_path, 'w', encoding='utf-8') as f:
-            f.write(md_output)
-        print(f"Markdown output written to: {md_path}")
+    # Write output files
+    print("\nWriting output files...")
+
+    all_json_path = os.path.join(output_dir, 'all_delays.json')
+    with open(all_json_path, 'w', encoding='utf-8') as f:
+        json.dump(all_json, f, indent=2, ensure_ascii=False)
+    print(f"  {all_json_path}")
+
+    all_md_path = os.path.join(output_dir, 'all_delays.md')
+    with open(all_md_path, 'w', encoding='utf-8') as f:
+        f.write(all_md)
+    print(f"  {all_md_path}")
+
+    critical_json_path = os.path.join(output_dir, 'critical_delays.json')
+    with open(critical_json_path, 'w', encoding='utf-8') as f:
+        json.dump(critical_json, f, indent=2, ensure_ascii=False)
+    print(f"  {critical_json_path}")
+
+    critical_md_path = os.path.join(output_dir, 'critical_delays.md')
+    with open(critical_md_path, 'w', encoding='utf-8') as f:
+        f.write(critical_md)
+    print(f"  {critical_md_path}")
 
     # Print summary
-    by_itself = sum(1 for a in delayed_activities if a['delay_reason'] == 'by_itself')
-    by_predecessor = sum(1 for a in delayed_activities if a['delay_reason'] == 'by_predecessor')
+    all_by_itself = sum(1 for a in all_delayed if a['delay_reason'] == 'by_itself')
+    all_by_predecessor = sum(1 for a in all_delayed if a['delay_reason'] == 'by_predecessor')
+    critical_by_itself = sum(1 for a in critical_delayed if a['delay_reason'] == 'by_itself')
+    critical_by_predecessor = sum(1 for a in critical_delayed if a['delay_reason'] == 'by_predecessor')
 
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print("ANALYSIS SUMMARY")
-    print("=" * 50)
-    print(f"Critical Path Activities: {len(critical_tasks)}")
-    print(f"Delayed Activities:       {len(delayed_activities)}")
-    print(f"  - By Itself:            {by_itself}")
-    print(f"  - By Predecessor:       {by_predecessor}")
-    print("=" * 50)
+    print("=" * 60)
+    print(f"{'':30} {'All':>12} {'Critical':>12}")
+    print("-" * 60)
+    print(f"{'Total Activities Analyzed':30} {len(all_task_codes):>12} {len(critical_tasks):>12}")
+    print(f"{'Delayed Activities':30} {len(all_delayed):>12} {len(critical_delayed):>12}")
+    print(f"{'  - By Itself':30} {all_by_itself:>12} {critical_by_itself:>12}")
+    print(f"{'  - By Predecessor':30} {all_by_predecessor:>12} {critical_by_predecessor:>12}")
+    print("=" * 60)
 
 
 if __name__ == '__main__':
