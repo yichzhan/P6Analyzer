@@ -126,6 +126,7 @@ P6 supports four dependency relationship types:
 │  STEP 3: FILTER CRITICAL PATH DELAYS                            │
 │  - Filter all_delays to only activities on critical path        │
 │  - Create critical_delays subset                                │
+│  - Calculate project delay (terminal activity end date slip)    │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
@@ -194,12 +195,21 @@ For each successor in activity.dependencies.successors:
     "baseline_project_code": "BIG_CR_L3_F05_UP0331",
     "updated_project_code": "BIG_CR_L3_F05_UP0825"
   },
-  "report_type": "all",  // or "critical"
+  "report_type": "critical",
   "summary": {
-    "total_activities_analyzed": 3088,
-    "delayed_count": 1462,
-    "by_itself_count": 100,
-    "by_predecessor_count": 1362
+    "total_activities_analyzed": 51,
+    "delayed_count": 26,
+    "by_itself_count": 1,
+    "by_predecessor_count": 25
+  },
+  "critical_path_impact": {
+    "project_delay_days": 15,
+    "terminal_activity": {
+      "task_code": "0000MSSU0000010",
+      "task_name": "Project Complete",
+      "baseline_end": "2026-02-28T16:00:00Z",
+      "updated_end": "2026-03-15T16:00:00Z"
+    }
   },
   "delayed_activities": [
     {
@@ -252,13 +262,25 @@ For each successor in activity.dependencies.successors:
 
 ### 5.2 Markdown Output Structure
 
+For `critical_delays.md`, a Project Delay Impact section is added at the top:
+
 ```markdown
-# P6 Schedule Delay Analysis Report
+# P6 Critical Path Delay Analysis Report
 
 **Project**: BIG_CR_L3_F05_UP0825
 **Analysis Date**: 2026-01-22
 **Baseline**: Schedule_Baseline_activities.json (BIG_CR_L3_F05_UP0331)
 **Updated**: Schedule_Updated_activities.json (BIG_CR_L3_F05_UP0825)
+
+---
+
+## ⚠️ Project Delay Impact
+
+**Project Completion Delayed by: 15 days**
+
+| Terminal Activity | Baseline End | Updated End | Delay |
+|-------------------|--------------|-------------|-------|
+| 0000MSSU0000010 - Project Complete | 2026-02-28 | 2026-03-15 | **+15 days** |
 
 ---
 

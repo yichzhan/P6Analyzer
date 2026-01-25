@@ -186,6 +186,56 @@ def find_impacted_successors(
     return impacted
 
 
+def calculate_critical_path_impact(
+    critical_tasks: Set[str],
+    baseline_activities: Dict[str, dict],
+    updated_activities: Dict[str, dict]
+) -> Optional[dict]:
+    """
+    Calculate the project delay based on the terminal activity of the critical path.
+
+    Returns:
+        Dictionary with project delay info, or None if no terminal activity found
+    """
+    # Find the terminal activity (latest end date in updated schedule)
+    terminal_activity = None
+    terminal_end_date = None
+
+    for task_code in critical_tasks:
+        updated = updated_activities.get(task_code)
+        if not updated:
+            continue
+
+        end_date = parse_date(updated.get('planned_end_date'))
+        if end_date and (terminal_end_date is None or end_date > terminal_end_date):
+            terminal_end_date = end_date
+            terminal_activity = updated
+            terminal_task_code = task_code
+
+    if not terminal_activity:
+        return None
+
+    # Get baseline info for the terminal activity
+    baseline = baseline_activities.get(terminal_task_code)
+    if not baseline:
+        return None
+
+    baseline_end = parse_date(baseline.get('planned_end_date'))
+    updated_end = parse_date(terminal_activity.get('planned_end_date'))
+
+    delay_days = calculate_delay_days(baseline_end, updated_end)
+
+    return {
+        'project_delay_days': round(delay_days, 1) if delay_days else 0,
+        'terminal_activity': {
+            'task_code': terminal_task_code,
+            'task_name': terminal_activity.get('task_name', ''),
+            'baseline_end': baseline.get('planned_end_date'),
+            'updated_end': terminal_activity.get('planned_end_date')
+        }
+    }
+
+
 def analyze_delays(
     task_codes: Set[str],
     baseline_activities: Dict[str, dict],
@@ -267,13 +317,14 @@ def generate_json_output(
     delayed_activities: List[dict],
     total_activities: int,
     analysis_info: dict,
-    report_type: str = "all"
+    report_type: str = "all",
+    critical_path_impact: Optional[dict] = None
 ) -> dict:
     """Generate JSON output structure."""
     by_itself_count = sum(1 for a in delayed_activities if a['delay_reason'] == 'by_itself')
     by_predecessor_count = sum(1 for a in delayed_activities if a['delay_reason'] == 'by_predecessor')
 
-    return {
+    result = {
         'analysis_info': analysis_info,
         'report_type': report_type,
         'summary': {
@@ -281,9 +332,15 @@ def generate_json_output(
             'delayed_count': len(delayed_activities),
             'by_itself_count': by_itself_count,
             'by_predecessor_count': by_predecessor_count
-        },
-        'delayed_activities': delayed_activities
+        }
     }
+
+    # Add critical path impact for critical reports
+    if report_type == "critical" and critical_path_impact:
+        result['critical_path_impact'] = critical_path_impact
+
+    result['delayed_activities'] = delayed_activities
+    return result
 
 
 def format_date_short(date_str: Optional[str]) -> str:
@@ -300,7 +357,8 @@ def generate_markdown_output(
     delayed_activities: List[dict],
     total_activities: int,
     analysis_info: dict,
-    report_type: str = "all"
+    report_type: str = "all",
+    critical_path_impact: Optional[dict] = None
 ) -> str:
     """Generate Markdown report."""
     by_itself = [a for a in delayed_activities if a['delay_reason'] == 'by_itself']
@@ -321,6 +379,27 @@ def generate_markdown_output(
         f"**Baseline**: {analysis_info.get('baseline_file', 'N/A')} ({analysis_info.get('baseline_project_code', '')})",
         f"**Updated**: {analysis_info.get('updated_file', 'N/A')} ({analysis_info.get('updated_project_code', '')})",
         "",
+    ]
+
+    # Add critical path impact section for critical reports
+    if report_type == "critical" and critical_path_impact:
+        delay_days = critical_path_impact.get('project_delay_days', 0)
+        terminal = critical_path_impact.get('terminal_activity', {})
+
+        lines.extend([
+            "---",
+            "",
+            "## ⚠️ Project Delay Impact",
+            "",
+            f"**Project Completion Delayed by: {delay_days} days**",
+            "",
+            "| Terminal Activity | Baseline End | Updated End | Delay |",
+            "|-------------------|--------------|-------------|-------|",
+            f"| {terminal.get('task_code', 'N/A')} - {terminal.get('task_name', 'N/A')} | {format_date_short(terminal.get('baseline_end'))} | {format_date_short(terminal.get('updated_end'))} | **+{delay_days} days** |",
+            "",
+        ])
+
+    lines.extend([
         "---",
         "",
         "## Summary",
@@ -334,7 +413,7 @@ def generate_markdown_output(
         "",
         "---",
         ""
-    ]
+    ])
 
     # Delays by Itself section
     lines.append("## Delays by Itself (Action Required)")
@@ -495,6 +574,14 @@ Output files (generated in output directory):
     critical_delayed = [a for a in all_delayed if a['task_code'] in critical_tasks]
     print(f"  Found {len(critical_delayed)} delayed activities on critical path")
 
+    # Calculate critical path impact (project delay)
+    print("Calculating critical path impact...")
+    critical_path_impact = calculate_critical_path_impact(
+        critical_tasks, baseline_activities, updated_activities
+    )
+    if critical_path_impact:
+        print(f"  Project delayed by {critical_path_impact['project_delay_days']} days")
+
     # Ensure output directory exists
     output_dir = args.output_dir
     if output_dir and output_dir != '.':
@@ -505,8 +592,8 @@ Output files (generated in output directory):
     all_md = generate_markdown_output(all_delayed, len(all_task_codes), analysis_info, "all")
 
     # Generate critical_delays outputs
-    critical_json = generate_json_output(critical_delayed, len(critical_tasks), analysis_info, "critical")
-    critical_md = generate_markdown_output(critical_delayed, len(critical_tasks), analysis_info, "critical")
+    critical_json = generate_json_output(critical_delayed, len(critical_tasks), analysis_info, "critical", critical_path_impact)
+    critical_md = generate_markdown_output(critical_delayed, len(critical_tasks), analysis_info, "critical", critical_path_impact)
 
     # Write output files
     print("\nWriting output files...")
@@ -540,6 +627,15 @@ Output files (generated in output directory):
     print("\n" + "=" * 60)
     print("ANALYSIS SUMMARY")
     print("=" * 60)
+
+    # Show project delay impact
+    if critical_path_impact:
+        delay_days = critical_path_impact['project_delay_days']
+        terminal = critical_path_impact['terminal_activity']
+        print(f"PROJECT COMPLETION DELAYED BY: {delay_days} days")
+        print(f"Terminal Activity: {terminal['task_code']}")
+        print("-" * 60)
+
     print(f"{'':30} {'All':>12} {'Critical':>12}")
     print("-" * 60)
     print(f"{'Total Activities Analyzed':30} {len(all_task_codes):>12} {len(critical_tasks):>12}")

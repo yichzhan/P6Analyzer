@@ -47,9 +47,10 @@ python p6analyzer.py Sample_file/Schedule_Baseline_activities.json \
 ## Architecture
 
 ```
-p6analyzer.py                       # Single-file CLI tool (~500 lines)
+p6analyzer.py                       # Single-file CLI tool (~600 lines)
 ├── load_activities()               # Load JSON, index by task_code
 ├── load_critical_path()            # Extract critical path task_codes
+├── calculate_critical_path_impact()# Project delay from terminal activity
 ├── analyze_delays()                # Main analysis loop
 │   ├── check_predecessor_caused_delay()  # Cause analysis
 │   └── find_impacted_successors()        # Impact analysis
@@ -121,34 +122,29 @@ p6analyzer.py                       # Single-file CLI tool (~500 lines)
 
 ## Output Format
 
-Both `all_delays` and `critical_delays` files share the same structure.
+Both `all_delays` and `critical_delays` files share the same structure. The `critical_delays` output includes an additional `critical_path_impact` section.
 
 ### JSON Structure
 ```json
 {
-  "report_type": "all",  // or "critical"
+  "report_type": "critical",
   "summary": {
-    "total_activities_analyzed": 3088,
-    "delayed_count": 1462,
-    "by_itself_count": 100,
-    "by_predecessor_count": 1362
+    "total_activities_analyzed": 51,
+    "delayed_count": 26,
+    "by_itself_count": 1,
+    "by_predecessor_count": 25
   },
-  "delayed_activities": [
-    {
-      "task_code": "...",
-      "task_name": "...",
-      "baseline_start": "...",
-      "baseline_end": "...",
-      "updated_start": "...",
-      "updated_end": "...",
-      "start_delay_days": 9,
-      "end_delay_days": 6,
-      "delay_reason": "by_itself",
-      "causing_predecessors": [],
-      "impacted_successors": [
-        { "task_code": "...", "task_name": "...", "dependency_type": "FS" }
-      ]
+  "critical_path_impact": {
+    "project_delay_days": 15,
+    "terminal_activity": {
+      "task_code": "0000MSSU0000010",
+      "task_name": "Project Complete",
+      "baseline_end": "2026-02-28T16:00:00Z",
+      "updated_end": "2026-03-15T16:00:00Z"
     }
-  ]
+  },
+  "delayed_activities": [...]
 }
 ```
+
+The `critical_path_impact` shows the project completion delay based on the terminal activity (latest end date on critical path).
