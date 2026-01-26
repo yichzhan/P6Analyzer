@@ -10,13 +10,15 @@
 
 ## 2. Input Files
 
-Three JSON files converted from P6 XER exports:
+Two to three JSON files converted from P6 XER exports:
 
-| File | Description |
-|------|-------------|
-| Baseline Schedule | Original planned schedule with activities, dates, dependencies |
-| Updated Schedule | Current/revised schedule (same structure as baseline) |
-| Critical Path | Activities on the critical path from the updated schedule |
+| File | Required | Description |
+|------|----------|-------------|
+| Baseline Schedule | Yes | Original planned schedule with activities, dates, dependencies |
+| Updated Schedule | Yes | Current/revised schedule (same structure as baseline) |
+| Critical Path | Optional | Activities on the critical path from the updated schedule |
+
+**Note**: When critical path is not provided, only `all_delays` outputs are generated.
 
 ### 2.1 Activity Schedule Format (Baseline & Updated)
 
@@ -341,17 +343,28 @@ These activities are delayed due to upstream dependencies.
 ## 6. Command Line Interface
 
 ```bash
+# Analyze all delays only
+python p6analyzer.py <baseline.json> <updated.json> [-d <output_dir>]
+
+# Analyze all delays + critical path delays
 python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> [-d <output_dir>]
 ```
 
 **Arguments:**
-- `baseline.json` - Path to baseline schedule JSON file
-- `updated.json` - Path to updated schedule JSON file
-- `critical_path.json` - Path to critical path JSON file
+- `baseline.json` - Path to baseline schedule JSON file (required)
+- `updated.json` - Path to updated schedule JSON file (required)
+- `critical_path.json` - Path to critical path JSON file (optional)
 - `-d <output_dir>` - Output directory (optional, defaults to current directory)
 
-**Example:**
+**Examples:**
 ```bash
+# Analyze all delays only (generates 2 files)
+python p6analyzer.py \
+    Sample_file/Schedule_Baseline_activities.json \
+    Sample_file/Schedule_Updated_activities.json \
+    -d Output
+
+# Analyze all delays + critical path delays (generates 4 files)
 python p6analyzer.py \
     Sample_file/Schedule_Baseline_activities.json \
     Sample_file/Schedule_Updated_activities.json \
@@ -359,9 +372,13 @@ python p6analyzer.py \
     -d Output
 ```
 
-This generates 4 files in the output directory:
+**Output files generated:**
+
+Always generated:
 - `all_delays.json` - All delayed activities (JSON)
 - `all_delays.md` - All delayed activities (Markdown)
+
+Only when critical_path provided:
 - `critical_delays.json` - Critical path delays only (JSON)
 - `critical_delays.md` - Critical path delays only (Markdown)
 

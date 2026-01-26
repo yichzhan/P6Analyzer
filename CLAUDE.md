@@ -12,19 +12,22 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Cause**: Whether delay is `by_itself` (root cause) or `by_predecessor` (inherited)
 - **Impact**: Which direct successor tasks will be affected
 
-**Inputs** (3 JSON files converted from P6 XER exports):
+**Inputs** (2-3 JSON files converted from P6 XER exports):
 1. **Baseline schedule** - Original planned schedule with activities, dates, dependencies
 2. **Updated schedule** - Current/revised schedule (same structure)
-3. **Critical path** - Activities on the critical path from updated schedule
+3. **Critical path** (optional) - Activities on the critical path from updated schedule
 
-**Output** (4 files generated):
-- `all_delays.json` / `all_delays.md` - ALL delayed activities in the project
-- `critical_delays.json` / `critical_delays.md` - Only delays on the critical path
+**Output**:
+- `all_delays.json` / `all_delays.md` - ALL delayed activities in the project (always generated)
+- `critical_delays.json` / `critical_delays.md` - Only delays on the critical path (only when critical_path provided)
 
 ## Build & Development Commands
 
 ```bash
-# Basic usage (outputs to current directory)
+# Analyze all delays only (generates all_delays.* files)
+python p6analyzer.py <baseline.json> <updated.json>
+
+# Analyze all delays + critical path delays (generates all 4 files)
 python p6analyzer.py <baseline.json> <updated.json> <critical_path.json>
 
 # With output directory
@@ -32,12 +35,19 @@ python p6analyzer.py <baseline.json> <updated.json> <critical_path.json> -d <out
 ```
 
 **Options:**
+- `critical_path` - Optional positional argument for critical path JSON file
 - `-d, --output-dir` - Output directory (default: current directory)
 
 No pip install required - uses Python standard library only.
 
 **Test with sample files:**
 ```bash
+# All delays only
+python p6analyzer.py Sample_file/Schedule_Baseline_activities.json \
+    Sample_file/Schedule_Updated_activities.json \
+    -d Output
+
+# All delays + critical path analysis
 python p6analyzer.py Sample_file/Schedule_Baseline_activities.json \
     Sample_file/Schedule_Updated_activities.json \
     Sample_file/Schedule_Updated_critical_path.json \

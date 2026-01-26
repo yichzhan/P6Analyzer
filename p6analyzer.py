@@ -521,12 +521,20 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 Examples:
+  # Analyze all delays only
+  python p6analyzer.py baseline.json updated.json
+
+  # Analyze all delays + critical path delays
   python p6analyzer.py baseline.json updated.json critical_path.json
+
+  # With output directory
   python p6analyzer.py baseline.json updated.json critical_path.json -d output/
 
-Output files (generated in output directory):
+Output files (always generated):
   - all_delays.json      All delayed activities (JSON)
   - all_delays.md        All delayed activities (Markdown)
+
+Output files (only when critical_path provided):
   - critical_delays.json Critical path delays only (JSON)
   - critical_delays.md   Critical path delays only (Markdown)
         '''
@@ -534,7 +542,7 @@ Output files (generated in output directory):
 
     parser.add_argument('baseline', help='Path to baseline schedule JSON file')
     parser.add_argument('updated', help='Path to updated schedule JSON file')
-    parser.add_argument('critical_path', help='Path to critical path JSON file')
+    parser.add_argument('critical_path', nargs='?', help='Path to critical path JSON file (optional)')
     parser.add_argument('-d', '--output-dir', default='.',
                         help='Output directory (default: current directory)')
 
@@ -549,19 +557,25 @@ Output files (generated in output directory):
     updated_activities, updated_project = load_activities(args.updated)
     print(f"  Loaded {len(updated_activities)} activities")
 
-    print(f"Loading critical path: {args.critical_path}")
-    critical_tasks, cp_project, cp_summary = load_critical_path(args.critical_path)
-    print(f"  Found {len(critical_tasks)} activities on critical path")
+    # Conditionally load critical path
+    critical_tasks = set()
+    if args.critical_path:
+        print(f"Loading critical path: {args.critical_path}")
+        critical_tasks, cp_project, cp_summary = load_critical_path(args.critical_path)
+        print(f"  Found {len(critical_tasks)} activities on critical path")
+    else:
+        print("No critical path file provided - skipping critical path analysis")
 
     # Prepare analysis info
     analysis_info = {
         'analysis_date': datetime.now().isoformat(),
         'baseline_file': args.baseline.split('/')[-1],
         'updated_file': args.updated.split('/')[-1],
-        'critical_path_file': args.critical_path.split('/')[-1],
         'baseline_project_code': baseline_project.get('project_code', ''),
         'updated_project_code': updated_project.get('project_code', '')
     }
+    if args.critical_path:
+        analysis_info['critical_path_file'] = args.critical_path.split('/')[-1]
 
     # Analyze ALL delays (activities that exist in both baseline and updated)
     print("\nAnalyzing all delays...")
@@ -569,18 +583,22 @@ Output files (generated in output directory):
     all_delayed = analyze_delays(all_task_codes, baseline_activities, updated_activities)
     print(f"  Found {len(all_delayed)} delayed activities (out of {len(all_task_codes)} common activities)")
 
-    # Filter to critical path delays
-    print("Filtering critical path delays...")
-    critical_delayed = [a for a in all_delayed if a['task_code'] in critical_tasks]
-    print(f"  Found {len(critical_delayed)} delayed activities on critical path")
+    # Conditionally analyze critical path delays
+    critical_delayed = []
+    critical_path_impact = None
+    if args.critical_path:
+        # Filter to critical path delays
+        print("Filtering critical path delays...")
+        critical_delayed = [a for a in all_delayed if a['task_code'] in critical_tasks]
+        print(f"  Found {len(critical_delayed)} delayed activities on critical path")
 
-    # Calculate critical path impact (project delay)
-    print("Calculating critical path impact...")
-    critical_path_impact = calculate_critical_path_impact(
-        critical_tasks, baseline_activities, updated_activities
-    )
-    if critical_path_impact:
-        print(f"  Project delayed by {critical_path_impact['project_delay_days']} days")
+        # Calculate critical path impact (project delay)
+        print("Calculating critical path impact...")
+        critical_path_impact = calculate_critical_path_impact(
+            critical_tasks, baseline_activities, updated_activities
+        )
+        if critical_path_impact:
+            print(f"  Project delayed by {critical_path_impact['project_delay_days']} days")
 
     # Ensure output directory exists
     output_dir = args.output_dir
@@ -590,10 +608,6 @@ Output files (generated in output directory):
     # Generate all_delays outputs
     all_json = generate_json_output(all_delayed, len(all_task_codes), analysis_info, "all")
     all_md = generate_markdown_output(all_delayed, len(all_task_codes), analysis_info, "all")
-
-    # Generate critical_delays outputs
-    critical_json = generate_json_output(critical_delayed, len(critical_tasks), analysis_info, "critical", critical_path_impact)
-    critical_md = generate_markdown_output(critical_delayed, len(critical_tasks), analysis_info, "critical", critical_path_impact)
 
     # Write output files
     print("\nWriting output files...")
@@ -608,27 +622,30 @@ Output files (generated in output directory):
         f.write(all_md)
     print(f"  {all_md_path}")
 
-    critical_json_path = os.path.join(output_dir, 'critical_delays.json')
-    with open(critical_json_path, 'w', encoding='utf-8') as f:
-        json.dump(critical_json, f, indent=2, ensure_ascii=False)
-    print(f"  {critical_json_path}")
+    # Conditionally generate and write critical_delays outputs
+    if args.critical_path:
+        critical_json = generate_json_output(critical_delayed, len(critical_tasks), analysis_info, "critical", critical_path_impact)
+        critical_md = generate_markdown_output(critical_delayed, len(critical_tasks), analysis_info, "critical", critical_path_impact)
 
-    critical_md_path = os.path.join(output_dir, 'critical_delays.md')
-    with open(critical_md_path, 'w', encoding='utf-8') as f:
-        f.write(critical_md)
-    print(f"  {critical_md_path}")
+        critical_json_path = os.path.join(output_dir, 'critical_delays.json')
+        with open(critical_json_path, 'w', encoding='utf-8') as f:
+            json.dump(critical_json, f, indent=2, ensure_ascii=False)
+        print(f"  {critical_json_path}")
+
+        critical_md_path = os.path.join(output_dir, 'critical_delays.md')
+        with open(critical_md_path, 'w', encoding='utf-8') as f:
+            f.write(critical_md)
+        print(f"  {critical_md_path}")
 
     # Print summary
     all_by_itself = sum(1 for a in all_delayed if a['delay_reason'] == 'by_itself')
     all_by_predecessor = sum(1 for a in all_delayed if a['delay_reason'] == 'by_predecessor')
-    critical_by_itself = sum(1 for a in critical_delayed if a['delay_reason'] == 'by_itself')
-    critical_by_predecessor = sum(1 for a in critical_delayed if a['delay_reason'] == 'by_predecessor')
 
     print("\n" + "=" * 60)
     print("ANALYSIS SUMMARY")
     print("=" * 60)
 
-    # Show project delay impact
+    # Show project delay impact if critical path was analyzed
     if critical_path_impact:
         delay_days = critical_path_impact['project_delay_days']
         terminal = critical_path_impact['terminal_activity']
@@ -636,12 +653,26 @@ Output files (generated in output directory):
         print(f"Terminal Activity: {terminal['task_code']}")
         print("-" * 60)
 
-    print(f"{'':30} {'All':>12} {'Critical':>12}")
-    print("-" * 60)
-    print(f"{'Total Activities Analyzed':30} {len(all_task_codes):>12} {len(critical_tasks):>12}")
-    print(f"{'Delayed Activities':30} {len(all_delayed):>12} {len(critical_delayed):>12}")
-    print(f"{'  - By Itself':30} {all_by_itself:>12} {critical_by_itself:>12}")
-    print(f"{'  - By Predecessor':30} {all_by_predecessor:>12} {critical_by_predecessor:>12}")
+    if args.critical_path:
+        # Two-column summary when critical path is provided
+        critical_by_itself = sum(1 for a in critical_delayed if a['delay_reason'] == 'by_itself')
+        critical_by_predecessor = sum(1 for a in critical_delayed if a['delay_reason'] == 'by_predecessor')
+
+        print(f"{'':30} {'All':>12} {'Critical':>12}")
+        print("-" * 60)
+        print(f"{'Total Activities Analyzed':30} {len(all_task_codes):>12} {len(critical_tasks):>12}")
+        print(f"{'Delayed Activities':30} {len(all_delayed):>12} {len(critical_delayed):>12}")
+        print(f"{'  - By Itself':30} {all_by_itself:>12} {critical_by_itself:>12}")
+        print(f"{'  - By Predecessor':30} {all_by_predecessor:>12} {critical_by_predecessor:>12}")
+    else:
+        # Single-column summary when no critical path provided
+        print(f"{'':30} {'All':>12}")
+        print("-" * 60)
+        print(f"{'Total Activities Analyzed':30} {len(all_task_codes):>12}")
+        print(f"{'Delayed Activities':30} {len(all_delayed):>12}")
+        print(f"{'  - By Itself':30} {all_by_itself:>12}")
+        print(f"{'  - By Predecessor':30} {all_by_predecessor:>12}")
+
     print("=" * 60)
 
 
