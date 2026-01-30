@@ -9,6 +9,7 @@ Output/
 
 # Keep documentation and sample files
 !CLAUDE.md
+!CLAUDE_NOTES.md
 !FUNCTIONAL_DESIGN.md
 !Sample_file/**/*.json
 !Sample_file/**/*.md

@@ -79,6 +79,54 @@ def calculate_delay_days(baseline_date: Optional[datetime],
     return delta.total_seconds() / (24 * 3600)  # Convert to days
 
 
+def filter_contextual_notes(notes: List[str]) -> List[str]:
+    """
+    Filter notes to keep only contextual/meaningful notes.
+
+    Excludes:
+    - Single character notes (like 'Y')
+    - Notes starting with date patterns ('A:', 'F:', or digits)
+    - Known status words ('Not Start', 'cancelled', 'Cancelled', 'On-going')
+
+    Args:
+        notes: List of note strings from activity
+
+    Returns:
+        Filtered list containing only contextual notes
+    """
+    if not notes:
+        return []
+
+    # Known status words to exclude (case-insensitive)
+    status_words = {
+        'not start', 'cancelled', 'on-going', 'name changed',
+        'free agreement', 'by site subcontractor'
+    }
+
+    filtered = []
+    for note in notes:
+        if not note or not isinstance(note, str):
+            continue
+
+        # Skip single character notes
+        if len(note) <= 1:
+            continue
+
+        # Skip notes starting with date patterns (A:, F:, or digit)
+        if note.startswith(('A:', 'F:', 'A :', 'F :')):
+            continue
+        if note[0].isdigit():
+            continue
+
+        # Skip known status words (case-insensitive)
+        if note.lower().strip() in status_words:
+            continue
+
+        filtered.append(note)
+
+    return filtered
+
+
 def is_date_delayed(baseline_date: Optional[datetime],
                     updated_date: Optional[datetime]) -> bool:
     """Check if updated date is later than baseline date."""
@@ -296,6 +344,9 @@ def analyze_delays(
             task_code, start_delayed, end_delayed, updated_activities
         )
 
+        # Filter contextual notes from updated activity
+        contextual_notes = filter_contextual_notes(updated.get('notes', []))
+
         delayed_activities.append({
             'task_code': task_code,
             'task_name': updated.get('task_name', ''),
@@ -307,7 +358,8 @@ def analyze_delays(
             'end_delay_days': round(end_delay_days, 1) if end_delay_days else 0,
             'delay_reason': delay_reason,
             'causing_predecessors': causing_predecessors,
-            'impacted_successors': impacted_successors
+            'impacted_successors': impacted_successors,
+            'notes': contextual_notes
         })
 
     return delayed_activities
@@ -447,6 +499,14 @@ def generate_markdown_output(
             else:
                 lines.append("**Impacted Successors:** None")
             lines.append("")
+
+            # Add notes if present
+            if activity.get('notes'):
+                lines.append("**Notes:**")
+                for note in activity['notes']:
+                    lines.append(f"- {note}")
+                lines.append("")
+
             lines.append("---")
             lines.append("")
 
@@ -488,6 +548,14 @@ def generate_markdown_output(
             else:
                 lines.append("**Impacted Successors:** None")
             lines.append("")
+
+            # Add notes if present
+            if activity.get('notes'):
+                lines.append("**Notes:**")
+                for note in activity['notes']:
+                    lines.append(f"- {note}")
+                lines.append("")
+
             lines.append("---")
             lines.append("")
 

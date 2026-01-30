@@ -122,6 +122,7 @@ P6 supports four dependency relationship types:
 │    - Compare baseline vs updated planned_end_date               │
 │    - If either date moved later → activity is DELAYED           │
 │    - Analyze cause and impact for delayed activities            │
+│    - Extract contextual notes (filter out flags/dates/status)   │
 └─────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────┐
@@ -183,6 +184,20 @@ For each successor in activity.dependencies.successors:
 
 **Note**: Only direct successors are analyzed (not the full chain).
 
+### 4.5 Notes Filtering (contextual notes)
+
+Activity notes from P6 often contain a mix of flags, status indicators, date references, and meaningful contextual information. Only contextual notes are included in the output.
+
+**Excluded patterns:**
+- Single character flags (e.g., `"Y"`)
+- Date patterns starting with `"A:"`, `"F:"`, or digits (e.g., `"A: 28-Sep-22(S)"`, `"19-Nov-22..."`)
+- Status words: `"Not Start"`, `"cancelled"`, `"Cancelled"`, `"On-going"`, `"name changed"`, `"Free Agreement"`, `"by Site Subcontractor"`
+
+**Included (contextual notes):**
+- Explanatory text (e.g., `"acceleration schedule pending on EOTR-001 results"`)
+- Condition descriptions (e.g., `"early review by 21st August, 2023"`)
+- Any note that doesn't match the excluded patterns
+
 ## 5. Output Formats
 
 ### 5.1 JSON Output Structure
@@ -231,7 +246,8 @@ For each successor in activity.dependencies.successors:
           "task_name": "3D Model Update and Preparation for 90% Model Review",
           "dependency_type": "FS"
         }
-      ]
+      ],
+      "notes": ["early review by 21st August, 2023"]
     },
     {
       "task_code": "0000DE000000050",

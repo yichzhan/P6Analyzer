@@ -57,9 +57,10 @@ python p6analyzer.py Sample_file/Schedule_Baseline_activities.json \
 ## Architecture
 
 ```
-p6analyzer.py                       # Single-file CLI tool (~600 lines)
+p6analyzer.py                       # Single-file CLI tool (~650 lines)
 ├── load_activities()               # Load JSON, index by task_code
 ├── load_critical_path()            # Extract critical path task_codes
+├── filter_contextual_notes()       # Filter activity notes to contextual only
 ├── calculate_critical_path_impact()# Project delay from terminal activity
 ├── analyze_delays()                # Main analysis loop
 │   ├── check_predecessor_caused_delay()  # Cause analysis
@@ -82,6 +83,7 @@ p6analyzer.py                       # Single-file CLI tool (~600 lines)
       "planned_end_date": "2022-03-01T08:00:00Z",
       "actual_start_date": "2022-03-01T08:00:00Z",  // null if not started
       "actual_end_date": "2022-03-01T08:00:00Z",
+      "notes": ["Y", "acceleration schedule pending"],  // optional activity notes
       "dependencies": {
         "predecessors": [{ "task_code": "...", "dependency_type": "FS", "lag_hours": 0.0 }],
         "successors": [{ "task_code": "...", "dependency_type": "FS", "lag_hours": 0.0 }]
@@ -117,6 +119,7 @@ p6analyzer.py                       # Single-file CLI tool (~600 lines)
 - **Impact tracing** - Direct successors only (not full chain)
 - **New activities** - Ignore activities that exist in updated but not baseline
 - **Dependency-aware analysis** - FS/FF use end dates, SS/SF use start dates
+- **Contextual notes only** - Filter out flags ("Y"), date patterns ("A:", "F:"), and status words; keep meaningful contextual notes
 
 ## Analysis Model
 
@@ -158,3 +161,22 @@ Both `all_delays` and `critical_delays` files share the same structure. The `cri
 ```
 
 The `critical_path_impact` shows the project completion delay based on the terminal activity (latest end date on critical path).
+
+### Delayed Activity Structure
+Each delayed activity includes:
+```json
+{
+  "task_code": "0000CMCM0000020",
+  "task_name": "Instrument System Commissioning",
+  "baseline_start": "2024-12-20T08:00:00Z",
+  "updated_start": "2025-01-17T08:00:00Z",
+  "start_delay_days": 28.0,
+  "end_delay_days": 0,
+  "delay_reason": "by_predecessor",
+  "causing_predecessors": [...],
+  "impacted_successors": [...],
+  "notes": ["acceleration schedule pending on EOTR-001 results"]
+}
+```
+
+The `notes` field contains filtered contextual notes from the updated schedule (excludes flags, dates, status words).
