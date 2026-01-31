@@ -186,9 +186,22 @@ For each successor in activity.dependencies.successors:
 
 ### 4.5 Notes Filtering (contextual notes)
 
-Activity notes from P6 often contain a mix of flags, status indicators, date references, and meaningful contextual information. Only contextual notes are included in the output.
+Activity notes from P6 contain a mix of flags, status indicators, date references, and meaningful contextual information. Only contextual notes are included in the output.
 
-**Excluded patterns:**
+**Input format (from P6 JSON):**
+```json
+"notes": [
+  {"label": "user_text2", "text": "Y"},
+  {"label": "备注", "text": "acceleration schedule pending"}
+]
+```
+
+**Output format (in delay analysis):**
+```json
+"notes": [{"label": "备注", "text": "acceleration schedule pending"}]
+```
+
+**Excluded patterns (applied to `text` field):**
 - Single character flags (e.g., `"Y"`)
 - Date patterns starting with `"A:"`, `"F:"`, or digits (e.g., `"A: 28-Sep-22(S)"`, `"19-Nov-22..."`)
 - Status words: `"Not Start"`, `"cancelled"`, `"Cancelled"`, `"On-going"`, `"name changed"`, `"Free Agreement"`, `"by Site Subcontractor"`
@@ -197,6 +210,8 @@ Activity notes from P6 often contain a mix of flags, status indicators, date ref
 - Explanatory text (e.g., `"acceleration schedule pending on EOTR-001 results"`)
 - Condition descriptions (e.g., `"early review by 21st August, 2023"`)
 - Any note that doesn't match the excluded patterns
+
+**Labels preserved:** The `label` field from input is preserved in output, helping identify the note source (e.g., `备注` = Remarks in Chinese).
 
 ## 5. Output Formats
 
@@ -247,7 +262,7 @@ Activity notes from P6 often contain a mix of flags, status indicators, date ref
           "dependency_type": "FS"
         }
       ],
-      "notes": ["early review by 21st August, 2023"]
+      "notes": [{"label": "备注", "text": "early review by 21st August, 2023"}]
     },
     {
       "task_code": "0000DE000000050",

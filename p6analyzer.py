@@ -79,20 +79,24 @@ def calculate_delay_days(baseline_date: Optional[datetime],
     return delta.total_seconds() / (24 * 3600)  # Convert to days
 
 
-def filter_contextual_notes(notes: List[str]) -> List[str]:
+def filter_contextual_notes(notes: List) -> List[dict]:
     """
     Filter notes to keep only contextual/meaningful notes.
 
-    Excludes:
-    - Single character notes (like 'Y')
-    - Notes starting with date patterns ('A:', 'F:', or digits)
-    - Known status words ('Not Start', 'cancelled', 'Cancelled', 'On-going')
+    Supports two input formats:
+    - New format: List of dicts with 'label' and 'text' keys
+    - Legacy format: List of strings
+
+    Excludes notes where text:
+    - Is a single character (like 'Y')
+    - Starts with date patterns ('A:', 'F:', or digits)
+    - Is a known status word ('Not Start', 'cancelled', etc.)
 
     Args:
-        notes: List of note strings from activity
+        notes: List of note dicts or strings from activity
 
     Returns:
-        Filtered list containing only contextual notes
+        Filtered list of dicts with 'label' and 'text' keys
     """
     if not notes:
         return []
@@ -105,24 +109,35 @@ def filter_contextual_notes(notes: List[str]) -> List[str]:
 
     filtered = []
     for note in notes:
-        if not note or not isinstance(note, str):
+        # Handle new format: dict with 'label' and 'text'
+        if isinstance(note, dict):
+            label = note.get('label', '')
+            text = note.get('text', '')
+        # Handle legacy format: plain string
+        elif isinstance(note, str):
+            label = ''
+            text = note
+        else:
+            continue
+
+        if not text:
             continue
 
         # Skip single character notes
-        if len(note) <= 1:
+        if len(text) <= 1:
             continue
 
         # Skip notes starting with date patterns (A:, F:, or digit)
-        if note.startswith(('A:', 'F:', 'A :', 'F :')):
+        if text.startswith(('A:', 'F:', 'A :', 'F :')):
             continue
-        if note[0].isdigit():
+        if text[0].isdigit():
             continue
 
         # Skip known status words (case-insensitive)
-        if note.lower().strip() in status_words:
+        if text.lower().strip() in status_words:
             continue
 
-        filtered.append(note)
+        filtered.append({'label': label, 'text': text})
 
     return filtered
 
@@ -504,7 +519,15 @@ def generate_markdown_output(
             if activity.get('notes'):
                 lines.append("**Notes:**")
                 for note in activity['notes']:
-                    lines.append(f"- {note}")
+                    if isinstance(note, dict):
+                        label = note.get('label', '')
+                        text = note.get('text', '')
+                        if label:
+                            lines.append(f"- [{label}] {text}")
+                        else:
+                            lines.append(f"- {text}")
+                    else:
+                        lines.append(f"- {note}")
                 lines.append("")
 
             lines.append("---")
@@ -553,7 +576,15 @@ def generate_markdown_output(
             if activity.get('notes'):
                 lines.append("**Notes:**")
                 for note in activity['notes']:
-                    lines.append(f"- {note}")
+                    if isinstance(note, dict):
+                        label = note.get('label', '')
+                        text = note.get('text', '')
+                        if label:
+                            lines.append(f"- [{label}] {text}")
+                        else:
+                            lines.append(f"- {text}")
+                    else:
+                        lines.append(f"- {note}")
                 lines.append("")
 
             lines.append("---")

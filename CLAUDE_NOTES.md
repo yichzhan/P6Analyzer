@@ -9,6 +9,8 @@ Development notes and milestone summaries for P6Analyzer project.
 ### 1. Current Goal and Scope
 Added contextual notes from P6 activity data to the delay analysis output. Notes are filtered to exclude non-meaningful content (flags, date patterns, status words) and retain only explanatory/contextual information that helps understand delay circumstances.
 
+**Update:** Enhanced to support labeled notes format from P6 (`{"label": "...", "text": "..."}`). Labels are preserved in output to identify note sources (e.g., `备注` = Remarks).
+
 ### 2. Files Touched
 
 **p6analyzer.py** (~45 line additions)

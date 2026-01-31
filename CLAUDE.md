@@ -83,7 +83,7 @@ p6analyzer.py                       # Single-file CLI tool (~650 lines)
       "planned_end_date": "2022-03-01T08:00:00Z",
       "actual_start_date": "2022-03-01T08:00:00Z",  // null if not started
       "actual_end_date": "2022-03-01T08:00:00Z",
-      "notes": ["Y", "acceleration schedule pending"],  // optional activity notes
+      "notes": [{"label": "user_text2", "text": "Y"}, {"label": "备注", "text": "acceleration schedule pending"}],  // optional
       "dependencies": {
         "predecessors": [{ "task_code": "...", "dependency_type": "FS", "lag_hours": 0.0 }],
         "successors": [{ "task_code": "...", "dependency_type": "FS", "lag_hours": 0.0 }]
@@ -175,8 +175,8 @@ Each delayed activity includes:
   "delay_reason": "by_predecessor",
   "causing_predecessors": [...],
   "impacted_successors": [...],
-  "notes": ["acceleration schedule pending on EOTR-001 results"]
+  "notes": [{"label": "备注", "text": "acceleration schedule pending on EOTR-001 results"}]
 }
 ```
 
-The `notes` field contains filtered contextual notes from the updated schedule (excludes flags, dates, status words).
+The `notes` field contains filtered contextual notes with their labels from the updated schedule (excludes flags, dates, status words).
